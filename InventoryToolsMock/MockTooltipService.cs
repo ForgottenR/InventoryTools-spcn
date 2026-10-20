@@ -1,5 +1,4 @@
 using CriticalCommonLib.Services;
-using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace InventoryToolsMock;
 
