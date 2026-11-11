@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -162,6 +162,7 @@ namespace InventoryTools
             this.RegisterHostedService(typeof(CraftListTrackingService));
             this.RegisterHostedService(typeof(HostedInventoryHistory));
             this.RegisterHostedService(typeof(HostedUniversalis));
+            this.RegisterHostedService(typeof(UniversalisWorldProvider));
             this.RegisterHostedService(typeof(HotkeyService));
             this.RegisterHostedService(typeof(IPCService));
             this.RegisterHostedService(typeof(InventoryToolsUi));

@@ -7,7 +7,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.html).
 
-<<<<<<< HEAD
 ## [15.1.1] - 2026-11-12
 
 ### Added
@@ -36,6 +35,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.h
 - The hunt rank shown for mobs was often wrong or missing
 - Oizys and Auxesia loot were not shown as item sources
 - Many mobs were missing spawn locations
+
+## [15.0.13] - 2026-11-12
+
+### Fixed
+- 修复国服客户端中服务器的 `World.IsPublic` 为 `false`，导致物品窗口 Market Pricing 下拉框没有国服服务器的问题。
+- 新增共享的 Universalis 世界列表服务：启动时后台刷新一次支持的 World ID 集合，物品窗口按 World ID 过滤并保留本地服务器名称；刷新成功后通过 Mediator 更新已打开的窗口。
+- 内置已知可用的 World ID 快照作为离线兜底，请求失败或返回空列表时保留上一份有效快照，不会清空价格服务器下拉框。
 
 ## [15.0.13] - 2026-10-29
 

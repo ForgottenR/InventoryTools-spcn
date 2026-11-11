@@ -61,3 +61,4 @@ public record OpenCompendiumListByTypeMessage(Type CompendiumTypeClass) : Messag
 public record ToggleCompendiumListByTypeMessage(Type CompendiumTypeClass) : MessageBase;
 public record OpenCompendiumViewByTypeMessage(Type CompendiumTypeClass, uint RowId) : MessageBase;
 public record OpenCurrentPOIMessage() : MessageBase;
+public record UniversalisWorldsUpdatedMessage() : MessageBase;

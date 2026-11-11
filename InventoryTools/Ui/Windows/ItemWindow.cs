@@ -85,6 +85,7 @@ namespace InventoryTools.Ui
         private readonly TeleporterService _teleporterService;
         private readonly CraftList.Factory _craftListFactory;
         private readonly IFont _font;
+        private readonly UniversalisWorldProvider _universalisWorldProvider;
         private HashSet<uint> _marketRefreshing = new();
 
         public ItemWindow(ILogger<ItemWindow> logger, MediatorService mediator, ImGuiService imGuiService,
@@ -96,6 +97,7 @@ namespace InventoryTools.Ui
             ImGuiTooltipService tooltipService, ImGuiTooltipModeSetting tooltipModeSetting, ItemLocalizer itemLocalizer, TeleporterService teleporterService,
             CraftList.Factory craftListFactory,
             IFont font,
+            UniversalisWorldProvider universalisWorldProvider,
             string name = "Item Window") : base(
             logger, mediator, imGuiService, configuration, name)
         {
@@ -122,6 +124,7 @@ namespace InventoryTools.Ui
             _teleporterService = teleporterService;
             _craftListFactory = craftListFactory;
             _font = font;
+            _universalisWorldProvider = universalisWorldProvider;
         }
 
         private void MarketCacheUpdated(MarketCacheUpdatedMessage obj)
@@ -133,13 +136,37 @@ namespace InventoryTools.Ui
             }
         }
 
+        private void UniversalisWorldsUpdated(UniversalisWorldsUpdatedMessage message)
+        {
+            _ = _framework.RunOnFrameworkThread(() => RefreshWorldPicker());
+        }
+
+        private void RefreshWorldPicker()
+        {
+            _picker = BuildWorldPicker(_picker.SelectedWorldIds);
+        }
+
+        private WorldPicker BuildWorldPicker(HashSet<uint> selectedWorldIds)
+        {
+            var supportedWorldIds = _universalisWorldProvider.SupportedWorldIds;
+            selectedWorldIds.RemoveWhere(worldId => !supportedWorldIds.Contains(worldId));
+            var worlds = _worldSheet
+                .Where(world => supportedWorldIds.Contains(world.RowId))
+                .OrderBy(world => world.Name.ExtractText())
+                .ToList();
+            return new WorldPicker(worlds, true, _otterLogger)
+            {
+                SelectedWorldIds = selectedWorldIds,
+            };
+        }
+
         public override void Initialize(uint itemId)
         {
             base.Initialize(itemId);
              Flags = ImGuiWindowFlags.NoSavedSettings;
             _itemId = itemId;
-            var worlds = _worldSheet.Where(c => c.IsPublic).ToList();
-            _picker = new WorldPicker(worlds, true, _otterLogger);
+            _picker = BuildWorldPicker(new HashSet<uint>());
+            MediatorService.Subscribe<UniversalisWorldsUpdatedMessage>(this, UniversalisWorldsUpdated);
             MediatorService.Subscribe<MarketCacheUpdatedMessage>(this, MarketCacheUpdated);
             if (Item != null)
             {
